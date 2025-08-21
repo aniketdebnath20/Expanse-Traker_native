@@ -4,12 +4,12 @@ import Input from '@/components/input'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Typo from '@/components/typo'
 import { colors, spacingX, spacingY } from '@/constants/theme'
+import { useAuth } from '@/contexts/authContext'
 import { verticalScale } from '@/utils/styling'
 import { useRouter } from 'expo-router'
 import * as Icons from 'phosphor-react-native'
 import React, { useRef, useState } from 'react'
 import { Alert, Pressable, StyleSheet, View } from 'react-native'
-
 
 const Register = () => {
 
@@ -18,17 +18,19 @@ const Register = () => {
   const passwordRef = useRef("");
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const { register } = useAuth();
 
-  const handleSubmit = () => {
-
+  const handleSubmit = async () => {
     if (!emailRef.current || !passwordRef.current || !nameRef.current) {
       Alert.alert('Login', 'Please fill all the fields');
       return
     }
 
+    setIsLoading(true);
+    const res = await register(emailRef.current, passwordRef.current, nameRef.current)
+    console.log(res)
 
-
-    console.log(emailRef, passwordRef)
+    if (!res.success) Alert.alert("Sign Up", res.msg)
   }
 
   return (
