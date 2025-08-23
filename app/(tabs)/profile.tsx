@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-
-const Profile = () => {
-  return (
-    <View>
-      <Text>Profile</Text>
-    </View>
-=======
 import Header from '@/components/header'
 import ScreenWrapper from '@/components/ScreenWrapper'
 import Typo from '@/components/typo'
@@ -19,7 +9,7 @@ import { verticalScale } from '@/utils/styling'
 import { Image } from 'expo-image'
 import Icons from 'phosphor-react-native'
 import React from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, TouchableOpacity, View } from 'react-native'
 
 const Profile = () => {
 
@@ -102,8 +92,18 @@ const Profile = () => {
         <View style={styles.accountOption}>
           {accountOptions.map((item, index) => {
             return (
-              <View>
-                <Typo>{item.title}</Typo>
+              <View key={index} style={styles.listItem}>
+                <TouchableOpacity style={styles.flexRow}>
+                  <View style={[styles.listIcon, { backgroundColor: item?.bgColor },]}>
+                    {item.icon && item.icon}
+                  </View>
+                  <Typo size={16} style={{ flex: 1 }} fontWeight={'500'}>{item.title}</Typo>
+                  <Icons.CaretRight
+                    size={verticalScale(20)}
+                    weight='bold'
+                    color={colors.white}
+                  />
+                </TouchableOpacity>
               </View>
             );
           })}
@@ -111,15 +111,11 @@ const Profile = () => {
 
       </View>
     </ScreenWrapper>
->>>>>>> bcd9552 (re add the git)
   )
 }
 
 export default Profile
 
-<<<<<<< HEAD
-const styles = StyleSheet.create({})
-=======
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -158,7 +154,7 @@ const styles = StyleSheet.create({
     gap: verticalScale(4),
     alignItems: 'center',
   },
-  listIcom: {
+  listIcon: {
     height: verticalScale(44),
     width: verticalScale(44),
     backgroundColor: colors.neutral500,
@@ -179,4 +175,3 @@ const styles = StyleSheet.create({
     gap: spacingX._20,
   },
 })
->>>>>>> bcd9552 (re add the git)

@@ -146,13 +146,8 @@ const styles = StyleSheet.create({
 
     // Android (fake top shadow)
     elevation: 0,
-<<<<<<< HEAD
-    borderTopWidth: 4,
-    borderColor: 'rgba(138, 130, 130, 0.4)',
-=======
     borderTopWidth: 3,
     borderColor: 'rgba(138, 130, 130, 0.2)',
->>>>>>> bcd9552 (re add the git)
   },
   buttomContainer: {
     width: '100%',

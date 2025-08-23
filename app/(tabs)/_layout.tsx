@@ -1,18 +1,3 @@
-<<<<<<< HEAD
-import { Tabs } from 'expo-router'
-import React from 'react'
-import { StyleSheet } from 'react-native'
-
-const _layout = () => {
-  return (
-  <Tabs></Tabs>
-)
-}
-
-export default _layout
-
-const styles = StyleSheet.create({})
-=======
 import CustomTabs from '@/components/customTabs'
 import { Tabs } from 'expo-router'
 import React from 'react'
@@ -32,4 +17,3 @@ const _layout = () => {
 }
 
 export default _layout
->>>>>>> bcd9552 (re add the git)

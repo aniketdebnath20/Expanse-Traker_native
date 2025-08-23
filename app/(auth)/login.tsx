@@ -27,11 +27,7 @@ const Login = () => {
 
         setIsLoading(true);
         const res = await login(emailRef.current, passwordRef.current)
-<<<<<<< HEAD
         setIsLoading(false);
-=======
-        console.log(res)
->>>>>>> bcd9552 (re add the git)
         if (!res.success) Alert.alert("Login", res.msg)
 
     }
