@@ -20,7 +20,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                     email: firebaseUser?.email,
                     name: firebaseUser?.displayName,
                 })
+<<<<<<< HEAD
                 router.replace("/_sitemap")
+=======
+                router.replace("/(tabs)")
+>>>>>>> bcd9552 (re add the git)
             } else {
                 setUser(null);
                 router.replace("/(auth)/welcome")
@@ -32,11 +36,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 
 
+<<<<<<< HEAD
 
 
     const login = async (email: string, password: string) => {
         try {
             await signInWithEmailAndPassword(auth, email, password)
+=======
+    const login = async (email: string, password: string) => {
+        try {
+            await signInWithEmailAndPassword(auth, email, password)
+            router.replace("/(tabs)")
+>>>>>>> bcd9552 (re add the git)
             return { success: true }
 
         } catch (error: any) {
@@ -56,6 +67,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 email,
                 uid: response?.user?.uid,
             })
+<<<<<<< HEAD
+=======
+            router.replace("/(tabs)")
+>>>>>>> bcd9552 (re add the git)
             return { success: true }
 
         } catch (error: any) {
