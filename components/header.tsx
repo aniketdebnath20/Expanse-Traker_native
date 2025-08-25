@@ -11,7 +11,7 @@ const Header = ({ title = "", leftIcon, style }: HeaderProps) => {
       {title && (
         <Typo
           size={22}
-          fontWeight={'200'}
+          fontWeight={'400'}
           style={{ textAlign: 'center', width: leftIcon ? '82%' : '100%' }}>
           {title}
         </Typo>)

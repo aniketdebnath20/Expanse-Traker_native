@@ -7,65 +7,54 @@ import { getProfileImage } from '@/services/getProfileImage'
 import { accountOptionType } from '@/types'
 import { verticalScale } from '@/utils/styling'
 import { Image } from 'expo-image'
-import Icons from 'phosphor-react-native'
+import { useRouter } from 'expo-router'
+import { CaretRight, GearSix, Lock, Power, User } from 'phosphor-react-native'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
+import Animated, { FadeInDown } from 'react-native-reanimated'
 
 const Profile = () => {
 
-  const { user } = useAuth();
+  const { user, showLogoutAlert } = useAuth();
+  const router = useRouter()
 
+  const handlePress = async (item: accountOptionType) => {
+    if (item?.title === "Logout") {
+      await showLogoutAlert(); // ✅ Firebase official method
+      console.log("User signed out successfully");
+    } else {
+      console.log("logout to:", item);
+      // here you can add navigation logic for Edit Profile, Settings, etc.
+    }
 
+    if (item?.routeName) return router.push(item.routeName)
+  };
   const accountOptions: accountOptionType[] = [
     {
       title: "Edit Profile",
-      icon: (
-        <Icons.User
-          size={26}
-          color={colors.white}
-          weight="fill"
-        />
-      ),
-      routeName: "/(modals)profileModal",
+      icon: <User size={26} color={colors.white} weight="fill" />,
       bgColor: "#6366f1",
+      routeName: '/(modals)/profileModal'
     },
     {
       title: "Setting",
-      icon: (
-        <Icons.GearSix
-          size={26}
-          color={colors.white}
-          weight="fill"
-        />
-      ),
-      // routeName: "/(modals)profileModal",
+      icon: <GearSix size={26} color={colors.white} weight="fill" />,
       bgColor: "#059669",
+      // routeName : 
     },
     {
-      title: "Privacy Ploicy",
-      icon: (
-        <Icons.Lock
-          size={26}
-          color={colors.white}
-          weight="fill"
-        />
-      ),
-      // routeName: "/(modals)profileModal",
+      title: "Privacy Policy",
+      icon: <Lock size={26} color={colors.white} weight="fill" />,
       bgColor: colors.neutral600,
+      // routeName : 
     },
     {
       title: "Logout",
-      icon: (
-        <Icons.Power
-          size={26}
-          color={colors.white}
-          weight="fill"
-        />
-      ),
-      // routeName: "/(modals)profileModal",
+      icon: <Power size={26} color={colors.white} weight="fill" />,
       bgColor: "#e11d48",
     },
-  ]
+  ];
+
 
 
   return (
@@ -92,19 +81,19 @@ const Profile = () => {
         <View style={styles.accountOption}>
           {accountOptions.map((item, index) => {
             return (
-              <View key={index} style={styles.listItem}>
-                <TouchableOpacity style={styles.flexRow}>
+              <Animated.View entering={FadeInDown.delay(index * 50).springify().damping(14)} key={index} style={styles.listItem}>
+                <TouchableOpacity style={styles.flexRow} onPress={() => handlePress(item)}>
                   <View style={[styles.listIcon, { backgroundColor: item?.bgColor },]}>
                     {item.icon && item.icon}
                   </View>
                   <Typo size={16} style={{ flex: 1 }} fontWeight={'500'}>{item.title}</Typo>
-                  <Icons.CaretRight
+                  <CaretRight
                     size={verticalScale(20)}
                     weight='bold'
                     color={colors.white}
                   />
                 </TouchableOpacity>
-              </View>
+              </Animated.View>
             );
           })}
         </View>
@@ -116,62 +105,26 @@ const Profile = () => {
 
 export default Profile
 
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: spacingX._20,
-  },
-  userInfo: {
-    marginTop: verticalScale(30),
-    alignItems: 'center',
-    gap: spacingY._15,
-  },
-  avatarContainer: {
-    position: 'relative',
-    alignSelf: 'center',
-  },
+  container: { flex: 1, paddingHorizontal: spacingX._20, },
+  userInfo: { marginTop: verticalScale(30), alignItems: 'center', gap: spacingY._15, },
+  avatarContainer: { position: 'relative', alignSelf: 'center', },
   avatar: {
-    alignSelf: 'center',
-    backgroundColor: colors.neutral300,
-    height: verticalScale(135),
-    width: verticalScale(135),
-    borderRadius: 200,
+    alignSelf: 'center', backgroundColor: colors.neutral300, height: verticalScale(135),
+    width: verticalScale(135), borderRadius: 200,
   },
   editIcon: {
-    position: 'absolute',
-    bottom: 5,
-    right: 8,
-    borderRadius: 50,
-    backgroundColor: colors.neutral100,
+    position: 'absolute', bottom: 5, right: 8, borderRadius: 50, backgroundColor: colors.neutral100,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 4,
-    padding: 5,
+    shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.25, shadowRadius: 10, elevation: 4, padding: 5,
   },
-  nameContainer: {
-    gap: verticalScale(4),
-    alignItems: 'center',
-  },
+  nameContainer: { gap: verticalScale(4), alignItems: 'center', },
   listIcon: {
-    height: verticalScale(44),
-    width: verticalScale(44),
-    backgroundColor: colors.neutral500,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: radius._15,
-    borderCurve: 'continuous',
+    height: verticalScale(44), width: verticalScale(44),
+    backgroundColor: colors.neutral500, alignItems: 'center', justifyContent: 'center', borderRadius: radius._15, borderCurve: 'continuous',
   },
-  listItem: {
-    marginBottom: verticalScale(17),
-  },
-  accountOption: {
-    marginTop: spacingY._35,
-  },
-  flexRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: spacingX._20,
-  },
+  listItem: { marginBottom: verticalScale(17), },
+  accountOption: { marginTop: spacingY._35, },
+  flexRow: { flexDirection: 'row', alignItems: 'center', gap: spacingX._20, },
 })
