@@ -5,26 +5,78 @@ import Input from '@/components/input'
 import ModalWrapper from '@/components/modalWrapper'
 import Typo from '@/components/typo'
 import { colors, spacingX, spacingY } from '@/constants/theme'
+import { useAuth } from '@/contexts/authContext'
 import { getProfileImage } from '@/services/getProfileImage'
+import { updateUser } from '@/services/userServices'
 import { UserDataType } from '@/types'
 import { scale, verticalScale } from '@/utils/styling'
 import { Image } from 'expo-image'
+import * as ImagePicker from "expo-image-picker"
+import { useRouter } from 'expo-router'
 import { Pencil } from 'phosphor-react-native'
-import React, { useState } from 'react'
-import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native'
+
 
 const ProfileModal = () => {
 
+    const router = useRouter()
+    const { user, updateUserData } = useAuth();
     const [loading, setLaoding] = useState(false)
     const [userData, setUserData] = useState<UserDataType>({
         name: '',
         image: null
     })
 
+    useEffect(() => {
+        setUserData({
+            name: user?.name || '',
+            image: user?.image || null
+        })
+    }, [user])
 
-    const onsubmit = () => {
 
+    const onsubmit = async () => {
+        let { name, image } = userData;
+        if (!name.trim()) {
+            Alert.alert("User", "Please fill all the fields");
+            return;
+        }
+
+        const res = await updateUser(user?.uid as string, userData)
+        if (res.success) {
+            updateUserData(user?.uid as string)
+            router.back()
+        }
+        else Alert.alert("user", res.msg)
     }
+    const onPickImage = async () => {
+        // 1. Ask for permission
+        const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (!permissionResult.granted) {
+            Alert.alert("Permission required", "You need to allow access to your gallery");
+            return;
+        }
+
+        // 2. Launch the image picker
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images, // ✅ correct way
+            allowsEditing: false, // crop UI
+            aspect: [4, 3],      // crop ratio
+            quality: 0.5,        // compression (0-1)
+        });
+
+        // 3. Handle cancellation
+        if (!result.canceled) {
+            const pickedUri = result.assets[0];
+            console.log("Picked image:", pickedUri);
+
+            // Example: update local state for your avatar
+            setUserData({ ...userData, image: pickedUri });
+        }
+    };
+
+
 
     return (
         <ModalWrapper>
@@ -39,7 +91,7 @@ const ProfileModal = () => {
                     <View style={styles.avatarContainer}>
                         <Image style={styles.avatar} source={getProfileImage(userData?.image)} contentFit='cover' transition={100} />
 
-                        <TouchableOpacity style={styles.editIcon}>
+                        <TouchableOpacity style={styles.editIcon} onPress={onPickImage}>
                             <Pencil size={verticalScale(20)} color={colors.neutral800} />
                         </TouchableOpacity>
                     </View>
